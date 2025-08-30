@@ -939,7 +939,8 @@ function copiarLista() {
             cleanDays: parseInt(localStorage.getItem('cleanDays') || '1'),
             savings: parseFloat(localStorage.getItem('personalSavings') || '0'),
             startDate: localStorage.getItem('startDate') || new Date().toDateString(),
-            lastDate: localStorage.getItem('lastDate') || new Date().toDateString()
+            lastDate: localStorage.getItem('lastDate') || ""
+
         };
 
         // Frases motivacionais
@@ -1054,13 +1055,29 @@ function copiarLista() {
         }
 
        function addBlock() {
-    personalData.blocks++;
-    personalData.savings += 50;
+    const today = new Date().toDateString();
+
+    // Se já registrou hoje, não deixa repetir
+    if (personalData.lastDate === today) {
+        alert("⚠️ Você já registrou o bloqueio de hoje!");
+        return;
+    }
+
+    // Atualiza estatísticas
+    personalData.blocks = 1; // sempre 1 por dia
+    personalData.cleanDays++; 
+    personalData.savings += 50; // ajuste conforme a economia real
+    personalData.lastDate = today;
+
+    // Atualiza exibição
     updatePersonalStats();
-    
+    updateGoals(); // 🔥 nova função que liga com Metas e Conquistas
+    localStorage.setItem('lastDate', today);
+
+    // Feedback no botão
     const btn = event.target;
     const originalText = btn.textContent;
-    btn.textContent = '✅ Registrado!';
+    btn.textContent = '✅ Dia Registrado!';
     btn.style.background = '#4CAF50';
     
     setTimeout(() => {
@@ -1103,6 +1120,31 @@ function copiarLista() {
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
             alert(randomMessage);
         }
+
+        function updateGoals() {
+    const goalsList = document.querySelectorAll('#apoio ul li');
+    const cleanDays = personalData.cleanDays;
+
+    goalsList.forEach((goal, index) => {
+        let goalText = goal.textContent;
+
+        // Define os marcos
+        let target = 0;
+        if (goalText.includes("1 dia")) target = 1;
+        if (goalText.includes("7 dias")) target = 7;
+        if (goalText.includes("30 dias")) target = 30;
+        if (goalText.includes("100 dias")) target = 100;
+        if (goalText.includes("1 ano")) target = 365;
+
+        // Marca meta concluída
+        if (cleanDays >= target) {
+            goal.innerHTML = "✅ " + goalText.replace("🎯", "");
+        } else {
+            goal.innerHTML = "🎯 " + goalText.replace("✅", "");
+        }
+    });
+}
+
 
         function rotateQuote() {
             const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
