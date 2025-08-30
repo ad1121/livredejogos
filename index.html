@@ -1053,21 +1053,22 @@ function copiarLista() {
             localStorage.setItem('personalSavings', personalData.savings.toString());
         }
 
-        function addBlock() {
-            personalData.blocks++;
-            personalData.savings += 50;
-            updatePersonalStats();
-            
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Registrado!';
-            btn.style.background = '#4CAF50';
-            
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
-            }, 2000);
-        }
+       function addBlock() {
+    personalData.blocks++;
+    personalData.savings += 50;
+    updatePersonalStats();
+    
+    const btn = event.target;
+    const originalText = btn.textContent;
+    btn.textContent = '✅ Registrado!';
+    btn.style.background = '#4CAF50';
+    
+    setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+    }, 2000);
+}
+
 
         function resetProgress() {
             if (confirm('⚠️ Recomeçar a contagem?\n\nIsso é normal no processo de recuperação. O importante é não desistir!')) {
